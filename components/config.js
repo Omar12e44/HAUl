@@ -1,4 +1,4 @@
-const SERVER_IP = '10.13.12.52'; // Cambia esta dirección IP por la tuya
+const SERVER_IP = '10.13.12.52'; 
 export default SERVER_IP;
 
 
