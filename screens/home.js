@@ -35,6 +35,7 @@ export default function Home() {
   const [useCurrentLocation, setUseCurrentLocation] = useState(false);
   
   const estados =[
+    'Penamiller',
     'Aguascalientes',
     'Baja California',
     'Baja California Sur',
