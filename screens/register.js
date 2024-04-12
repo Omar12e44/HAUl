@@ -3,12 +3,12 @@ import { View, Image, StyleSheet, TextInput, TouchableOpacity, Text, Alert } fro
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
 import SERVER_IP from "../components/config";
-import app from '../credenciales';
+import app from '../firebaseConfig';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
-const auth = getAuth(app);
 
 export default function Register() {
+    const auth = getAuth(app);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [UserName, setUserName] = useState('');

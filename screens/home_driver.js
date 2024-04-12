@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Modal, Button } from "react-native";
 
-const Home = () => {
+const HomeDriver = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handlePress = () => {
@@ -139,4 +139,4 @@ const styles = StyleSheet.create({
  
 });
 
-export default Home;
+export default HomeDriver;

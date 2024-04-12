@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import app from '../firebaseConfig';
 import { View, StyleSheet, Text, TextInput, Button, Alert, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import app from '../credenciales';
 import Navbar from '../components/navbar';
 import * as ImagePicker from 'expo-image-picker';
 import SERVER_IP from "../components/config";
+import { useAuth } from '../context/auth';
 
 
 
@@ -15,29 +16,22 @@ export default function Perfil() {
   const [userInfo, setUserInfo] = useState({});
   const [newName, setNewName] = useState('');
   const [profileImage, setProfileImage] = useState(null); // Estado para la imagen seleccionada
+  const {userId} = useAuth()
+
 
   useEffect(() => {
-    const auth = getAuth(app);
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const uid = user.uid;
-        fetchUserInfo(uid);
-      } else {
-        console.log('No hay usuario autenticado');
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+    fetchUserInfo(userId)
+    console.log('UserInfo: ', userInfo);
+  },[]);
 
   const fetchUserInfo = (uid) => {
-    fetch(`http://${SERVER_IP}/perfil/${uid}`)
+    fetch(`http://${SERVER_IP}:3000/perfil/${uid}`)
       .then(response => response.json())
       .then(data => {
         setUserInfo(data);
       })
       .catch(error => {
-        console.error('Error al obtener la información del usuario:', error);
+        console.error('Error al obtener la información del usuarioOO:', error);
         Alert.alert('Error', 'Error al obtener la información del usuario');
       });
   };

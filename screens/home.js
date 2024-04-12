@@ -1,16 +1,16 @@
 import SERVER_IP from "../components/config";
 import React, { useState, useEffect, useRef } from "react";
+import Checkbox  from 'expo-checkbox';
 import * as Location from "expo-location";
 import { Text, StyleSheet, View, Image, TouchableOpacity, Modal, TextInput, KeyboardAvoidingView, Dimensions, FlatList, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import Checkbox  from 'expo-checkbox';
 import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker } from 'react-native-maps';
-import app from '../credenciales';
+import app from '../firebaseConfig';
 import Navbar from "../components/navbar";
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import debounce from 'lodash.debounce';
+import { getAuth } from 'firebase/auth';
 
 
 export default function Home() {

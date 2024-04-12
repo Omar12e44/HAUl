@@ -1,25 +1,18 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 
-const tripsData = [
+const tripsData = 
   {
-    id: '1',
-    origin: 'Origen 1',
-    destination: 'Destino 1',
-    date: '2024-04-10',
-    status: 'Terminado',
-    report: 'Reporte del viaje 1',
-  },
-  {
-    id: '2',
-    origin: 'Origen 2',
-    destination: 'Destino 2',
-    date: '2024-04-09',
-    status: 'Terminado',
-    report: 'Reporte del viaje 2',
-  },
-  // Agrega más datos de viajes según sea necesario
-];
+    contratistaId: '',
+    driver_id:'',
+    carga_id:'',
+    origin: '',
+    destination: '',
+    date1: '',
+    date2: '',
+    status: '',
+    comentarios: '',
+  }
 
 const History = () => {
   const renderTripItem = ({ item }) => (

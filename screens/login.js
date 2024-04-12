@@ -4,21 +4,24 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import SERVER_IP from "../components/config";
-import app from '../credenciales'
-
+import app from '../firebaseConfig'
 import { getAuth, signInWithEmailAndPassword, initializeAuth, getReactNativePersistence } from 'firebase/auth';
 
-const auth = getAuth(app)
 
 export default function Login() {
+
+    const auth = getAuth(app)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    
     const navigation = useNavigation();
+
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
+
 
     const logeo = async () => {
         try {

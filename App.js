@@ -9,6 +9,8 @@ import Perfil from './screens/perfil';
 import register from './screens/register';
 import Navbar from './components/navbar';
 import Catalogo from './screens/catalogo'
+import HomeDriver from './screens/home_driver';
+import { AuthProvider } from './context/auth';
 
 
 const Stack = createStackNavigator();
@@ -35,7 +37,6 @@ export default function App() {
           
         }}
         />
-
         <Stack.Screen name="altaCarga" component={AltaCarga}
         options={{
           headerShown:false,
@@ -59,6 +60,16 @@ export default function App() {
           headerShown:false,
         }}
         />
+        <Stack.Screen name="driver" component={HomeDriver}
+        options={{
+          headerShown:false,
+        }}
+        />
+         <Stack.Screen name="driver" component={HomeDriver}
+        options={{
+          headerShown:false,
+        }}
+        />
        
         
       </Stack.Navigator>
@@ -66,9 +77,11 @@ export default function App() {
   }
 
   return (
+<AuthProvider>
     <NavigationContainer>
       <MyStack />
     </NavigationContainer>
+    </AuthProvider>
   );
 }
 

@@ -25,6 +25,11 @@ const Navbar = () => {
       // Parámetros opcionales
     });
   };
+  const handleGoToDriver = () => {
+    navigation.navigate('driver', {
+      // Parámetros opcionales
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -40,6 +45,9 @@ const Navbar = () => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleGoToLoads}>
           <AntDesign name="upload" size={24} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleGoToDriver}>
+        <MaterialCommunityIcons name="truck-delivery-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>
     </View>

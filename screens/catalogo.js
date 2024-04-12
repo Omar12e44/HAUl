@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import SERVER_IP from '../components/config';
+import { useAuth } from '../context/auth';
 
 export default function Catalogo({ route }) {
   const { data, carga } = route.params;
   const { destino, origen, tipoTransporte, city } = data;
   const [operadores, setOperadores] = useState([]);
+  const {userId} = useAuth()
 
   const obtenerDatosOperador = async (ciudad, tipoTransporte) => {
     try {
@@ -32,6 +34,7 @@ export default function Catalogo({ route }) {
     obtenerDatosOperador(city, tipoTransporte).then((data) => {
       setOperadores(data);
     });
+    console.log('User id from auth: ', userId);
   }, []);
 
   return (

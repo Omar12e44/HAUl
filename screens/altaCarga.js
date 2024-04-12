@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import app from '../credenciales';
+import app from '../firebaseConfig';
 import SERVER_IP from "../components/config";
 
 export default function AltaCarga() {
