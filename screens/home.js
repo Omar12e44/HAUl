@@ -11,13 +11,12 @@ import Navbar from "../components/navbar";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import debounce from 'lodash.debounce';
 import { getAuth } from 'firebase/auth';
-
+import { useAuth } from "../context/auth";
 
 export default function Home() {
   let typingTimer = useRef(null); 
 
-  const auth = getAuth();
-  const uid = auth.currentUser.uid;
+  const {userId} = useAuth()
   
   const [cargas, setCargas] = useState([]);
   const [transportOptions, setTransportOptions] = useState([]);
@@ -91,8 +90,9 @@ export default function Home() {
   const mapRef = useRef(null);
   
   useEffect(() => {
+    console.log('User id en la sesion que inicio: ', userId)
     getLocationPermission();
-    obtenerCargasUsuario(uid);
+    obtenerCargasUsuario(userId);
     obtenerOpcionesTransporte();
     getLocationPermission();
     handleLocation();
@@ -101,9 +101,9 @@ export default function Home() {
     };
   }, []);
     
-  const obtenerCargasUsuario = async (uid) => {
+  const obtenerCargasUsuario = async (userId) => {
     try {
-      const response = await fetch(`http://${SERVER_IP}:3000/cargas/${uid}`, {
+      const response = await fetch(`http://${SERVER_IP}:3000/cargas/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -11,13 +11,15 @@ import Navbar from './components/navbar';
 import Catalogo from './screens/catalogo'
 import HomeDriver from './screens/home_driver';
 import { AuthProvider } from './context/auth';
-
+import OngoingTrips from './screens/OngoingTrips'
+import OnGoing from './screens/OnGoing';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   function MyStack() {
     return (
+      <AuthProvider>
       <Stack.Navigator>
         <Stack.Screen name="login" component={Login} 
         options={{
@@ -65,7 +67,12 @@ export default function App() {
           headerShown:false,
         }}
         />
-         <Stack.Screen name="driver" component={HomeDriver}
+        <Stack.Screen name="onGoingTripsDriver" component={OngoingTrips}
+        options={{
+          headerShown:false,
+        }}
+        />
+         <Stack.Screen name="onGoing" component={OnGoing}
         options={{
           headerShown:false,
         }}
@@ -73,14 +80,15 @@ export default function App() {
        
         
       </Stack.Navigator>
+      </AuthProvider>
     );
   }
 
   return (
-<AuthProvider>
-    <NavigationContainer>
-      <MyStack />
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <MyStack />
+      </NavigationContainer>
     </AuthProvider>
   );
 }

@@ -1,21 +1,18 @@
+import SERVER_IP from "../components/config";
 import React, { useState } from "react";
+import { useAuth } from "../context/auth";
 import { View, Image, StyleSheet, TextInput, TouchableOpacity, Text, Alert    } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import SERVER_IP from "../components/config";
-import app from '../firebaseConfig'
-import { getAuth, signInWithEmailAndPassword, initializeAuth, getReactNativePersistence } from 'firebase/auth';
-
 
 export default function Login() {
 
-    const auth = getAuth(app)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    
     const navigation = useNavigation();
+    const { login, logInWithGoogle, resetPassword, userId} = useAuth()
 
 
     const togglePasswordVisibility = () => {
@@ -23,29 +20,15 @@ export default function Login() {
     };
 
 
-    const logeo = async () => {
+    const logeo = async (e) => {
+        e.preventDefault()
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-
-            const response = await fetch(`http://${SERVER_IP}:3000/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    uid: user.uid,
-                }),
-            });
-
-            if (response.ok) {
-                navigation.navigate('home');
-            } else {
-                throw new Error('Error en el servidor');
-            }
+            await login(email, password)
+            console.log('User id que inicio sesion en firebase: ', userId)
+            navigation.navigate('home')
         } catch (error) {
             console.log(error);
-            Alert.alert('El usuario o la contraseña son incorrectos');
+            Alert.alert('error:', error);
         }
     }
 

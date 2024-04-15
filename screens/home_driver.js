@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Modal, Button } from "react-native";
+import { useAuth } from "../context/auth";
+import SERVER_IP from "../components/config";
+import Navbar from "../components/navbar";
 
 const HomeDriver = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const {userId} = useAuth()
+  const [solicitudes,setSolicitudes] = useState()
+
 
   const handlePress = () => {
     setModalVisible(true);
@@ -13,31 +19,48 @@ const HomeDriver = () => {
     setModalVisible(false);
   };
 
+  const getSolicitudesUser = async() => {
+    try{
+      const response = await fetch(`http://${SERVER_IP}:3000/solicitud/${userId}`,{
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+      }
+    })
+    if (response.ok) {
+      const data = await response.json();
+      console.log("datos solicitudes",data)
+      return data;
+    }
+    if  (!response.ok) throw new Error(data.message || "HTTP error!");
+    }catch (error){
+      console.log("Error al obtener solicitudes del usuario", error);
+    } 
+  }
+
+  useEffect(()=>{
+    getSolicitudesUser().then((data) => setSolicitudes(data));
+  },[])
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Solicitudes Disponibles</Text>
+
+      {solicitudes ? solicitudes.map((solicitud) => (
+        <TouchableOpacity activeOpacity={0.8} key={solicitud.id} onPress={() => handlePress(solicitud)}>
+          <View style={styles.card}>
+            {/* Content of the card with solicitud information */}r
+            <Text style={styles.cardText}>Origen: {solicitud.origen}</Text>
+            <Text style={styles.cardText}>Destino: {solicitud.destino}</Text>
+          </View>
+        </TouchableOpacity>
+      ))
+    :
+    <View>
+      <Text>NO SE ENCONTRARON SOLICITUDES</Text>
+    </View>
+    }
       
-      {/* Tarjeta 1 */}
-      <TouchableOpacity activeOpacity={0.8} onPress={handlePress}>
-        <View style={styles.card}>
-          {/* Contenido de la tarjeta */}
-        </View>
-      </TouchableOpacity>
-
-      {/* Tarjeta 2 */}
-      <TouchableOpacity activeOpacity={0.8} onPress={handlePress}>
-        <View style={styles.card}>
-          {/* Contenido de la tarjeta */}
-        </View>
-      </TouchableOpacity>
-
-      {/* Tarjeta 3 */}
-      <TouchableOpacity activeOpacity={0.8} onPress={handlePress}>
-        <View style={styles.card}>
-          {/* Contenido de la tarjeta */}
-        </View>
-      </TouchableOpacity>
-
       {/* Modal para confirmar el viaje */}
       <Modal
         animationType="slide"
@@ -55,7 +78,8 @@ const HomeDriver = () => {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+      <Navbar></Navbar>
+    </ScrollView> 
   );
 };
 
@@ -71,7 +95,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
     color: "black",
-    textShadow: '2px 2px 5px rgba(0, 0, 0, 0.5)',
   },
   card: {
     width: "100%",

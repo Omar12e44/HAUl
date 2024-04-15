@@ -16,7 +16,7 @@ export default function Perfil() {
   const [userInfo, setUserInfo] = useState({});
   const [newName, setNewName] = useState('');
   const [profileImage, setProfileImage] = useState(null); // Estado para la imagen seleccionada
-  const {userId} = useAuth()
+  const { userId } = useAuth()
 
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-const SERVER_IP = '192.168.100.13';
+const SERVER_IP = '10.13.3.253';
 
 export default SERVER_IP;
 
