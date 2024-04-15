@@ -1,21 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Modal, Button } from "react-native";
 import { useAuth } from "../context/auth";
+import { useNavigation } from '@react-navigation/native';
 import SERVER_IP from "../components/config";
 import Navbar from "../components/navbar";
 
 const HomeDriver = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const {userId} = useAuth()
-  const [solicitudes,setSolicitudes] = useState()
+  const [selectedTransporte, setSelectedTransporte] = useState({
+    idSolicitud: '',
+    cargaId: '',
+    contratistaId: '',
+    driverId: '',
+    origen: '',
 
+  })
+  const [solicitudes,setSolicitudes] = useState([])
+  const { userId } = useAuth()
+  const navigation = useNavigation();
+  
 
-  const handlePress = () => {
+  const handlePress = (solicitud) => {
+    const newSelectedTransporte = {
+      idSolicitud: solicitud.id,
+      cargaId: solicitud.carga_id,
+      contratistaId: solicitud.contratista_id,
+      driverId: solicitud.driver_id,
+      origen: solicitud.origen,
+    }
+    setSelectedTransporte(newSelectedTransporte)
     setModalVisible(true);
   };
 
   const handleConfirm = () => {
-    // Aquí puedes agregar la lógica para confirmar el viaje
+    console.log(selectedTransporte)
+    navigation.navigate('OnGoingTrips', {userId: userId});
     setModalVisible(false);
   };
 
@@ -40,26 +59,32 @@ const HomeDriver = () => {
 
   useEffect(()=>{
     getSolicitudesUser().then((data) => setSolicitudes(data));
+    console.log(solicitudes)
   },[])
+
+  
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Solicitudes Disponibles</Text>
 
-      {solicitudes ? solicitudes.map((solicitud) => (
-        <TouchableOpacity activeOpacity={0.8} key={solicitud.id} onPress={() => handlePress(solicitud)}>
-          <View style={styles.card}>
-            {/* Content of the card with solicitud information */}r
-            <Text style={styles.cardText}>Origen: {solicitud.origen}</Text>
-            <Text style={styles.cardText}>Destino: {solicitud.destino}</Text>
-          </View>
-        </TouchableOpacity>
-      ))
-    :
-    <View>
-      <Text>NO SE ENCONTRARON SOLICITUDES</Text>
-    </View>
-    }
+      
+      {solicitudes.length > 0 && ( // Check if there are solicitudes before rendering the map
+        solicitudes.map((solicitud) => (
+          <TouchableOpacity activeOpacity={0.8} key={solicitud.id} onPress={() => handlePress(solicitud)}>
+            <View style={styles.card}>
+              {/* Content of the card with solicitud information */}
+              <Text style={styles.cardText}>Origen: {solicitud.origen}</Text>
+              <Text style={styles.cardText}>Destino: {solicitud.destino}</Text>
+            </View>
+          </TouchableOpacity>
+        ))
+      )}
+
+      {solicitudes.length === 0 && ( // Display a message if there are no solicitudes
+        <Text style={styles.noRequestsText}>No hay solicitudes disponibles en este momento.</Text>
+      )}
+
       
       {/* Modal para confirmar el viaje */}
       <Modal

@@ -67,7 +67,7 @@ export default function App() {
           headerShown:false,
         }}
         />
-        <Stack.Screen name="onGoingTripsDriver" component={OngoingTrips}
+        <Stack.Screen name="OnGoingTrips" component={OngoingTrips}
         options={{
           headerShown:false,
         }}
