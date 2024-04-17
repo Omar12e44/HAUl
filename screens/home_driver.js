@@ -27,14 +27,17 @@ const HomeDriver = () => {
       contratistaId: solicitud.contratista_id,
       driverId: solicitud.driver_id,
       origen: solicitud.origen,
+      destino: solicitud.destino,
+      transporteId: solicitud.transporte_id
     }
+
     setSelectedTransporte(newSelectedTransporte)
     setModalVisible(true);
   };
 
   const handleConfirm = () => {
-    console.log(selectedTransporte)
-    navigation.navigate('OnGoingTrips', {userId: userId});
+    console.log('transporte que se manda al ongoing: ',  selectedTransporte)
+    navigation.navigate('OnGoingTrips', {selectedTransporte: selectedTransporte});
     setModalVisible(false);
   };
 
@@ -58,7 +61,7 @@ const HomeDriver = () => {
   }
 
   useEffect(()=>{
-    getSolicitudesUser().then((data) => setSolicitudes(data));
+    getSolicitudesUser().then((data) => data ? setSolicitudes(data) : setSolicitudes([]));
     console.log(solicitudes)
   },[])
 
@@ -67,7 +70,6 @@ const HomeDriver = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Solicitudes Disponibles</Text>
-
       
       {solicitudes.length > 0 && ( // Check if there are solicitudes before rendering the map
         solicitudes.map((solicitud) => (

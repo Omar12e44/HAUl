@@ -13,10 +13,16 @@ import HomeDriver from './screens/home_driver';
 import { AuthProvider } from './context/auth';
 import OngoingTrips from './screens/OngoingTrips'
 import OnGoing from './screens/OnGoing';
+import { readDataRealTime } from './firebaseConfig';
+import { useEffect } from 'react';
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  useEffect(()=>{
+    readDataRealTime()
+  },[])
+
   function MyStack() {
     return (
       <AuthProvider>

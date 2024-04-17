@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { createContext, useContext } from "react";
 import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword} from 'firebase/auth'
-import { auth } from "../firebaseConfig";
+import { getDatabase, ref, get } from "firebase/database";
+import { auth } from "../firebaseConfig";   
 
 export const AuthContext = createContext()
 
@@ -16,6 +17,7 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null)
     const [userId, setUserId] = useState('')
     const [loading, setLoading] = useState(true)
+    const [gpsData, setGpsData] = useState({})
 
     useEffect(() => {
         onAuthStateChanged(auth, currentUser => {
@@ -36,6 +38,25 @@ export function AuthProvider({ children }) {
         return signInWithPopup(auth, googleProvider)
     }
 
+    const dbRealTime = getDatabase();
+
+    function readDataRealTime() {
+        const dataRef = ref(dbRealTime, "ubicacion_actual/");
+        get(dataRef)
+            .then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                setGpsData(data)
+                console.log('data en firebase context: ', gpsData)
+            }
+            }) 
+            .catch((error) => {
+            console.error(
+                "Error al leer los datos de la base de tiempo real:",
+                error
+            );
+        });
+    }
     return (
         <AuthContext.Provider 
             value={{
@@ -44,6 +65,8 @@ export function AuthProvider({ children }) {
                 userId,
                 loading,
                 logInWithGoogle,
+                gpsData,
+                readDataRealTime
             }} 
         >
             {children}

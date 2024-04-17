@@ -47,8 +47,10 @@ export default function Catalogo({ route }) {
       driverId: operador.transport_driver, 
       cargaId: carga.id, 
       origen: data.origen, 
-      destino: data.destino
+      destino: data.destino,
+      transporteId: operador.id
     })
+
     console.log('Respuesta de creacion de solicitud: ', response)
     if (response.ok) {
       // Navegar a la pantalla `onGoing` después de crear la solicitud
@@ -63,14 +65,15 @@ export default function Catalogo({ route }) {
     }
   };
   
-  const handleCreateSolicitud = async ({contratistaId, driverId, cargaId, origen, destino}) => {
+  const handleCreateSolicitud = async ({contratistaId, driverId, cargaId, origen, destino, transporteId}) => {
     // Redireccionar a la pantalla de creación de solicitudes con los parametros necesarios
     // Agregar un idOperador y una horaLlegada para que se pueda completar la solicitud
     // Al presionar "Crear Solicitud" mostrará una alerta con el mensaje "Solicitud Creado Correctamente!"
     // Si no se completa correctamente mostrara "Faltan campos requeridos"
     // Se podría agregar validaciones como verificar si las ciudades son diferentes o si la hora es menor a la actual
+    console.log('id que se manda para crear la solicitud transporte: ', transporteId)
     try{
-      const response = await fetch(`http://${SERVER_IP}:3000/crearSolicitud/${contratistaId}/${driverId}/${cargaId}/${origen}/${destino}`, {
+      const response = await fetch(`http://${SERVER_IP}:3000/crearSolicitud/${contratistaId}/${driverId}/${cargaId}/${origen}/${destino}/${transporteId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
