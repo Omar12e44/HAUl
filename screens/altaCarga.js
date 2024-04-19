@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, Image, StyleSheet, TextInput, TouchableOpacity, Text, Alert, ScrollView } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import app from '../firebaseConfig';
 import SERVER_IP from "../components/config";
+import { useAuth } from '../context/auth';
 
 export default function AltaCarga() {
   const [peso, setPeso] = useState('');
@@ -10,7 +11,10 @@ export default function AltaCarga() {
   const [largo, setLargo] = useState('');
   const [ancho, setAncho] = useState('');
   const [altura, setAltura] = useState('');
+  const [cargas, setCargas] = useState([]); 
   const [destino, setDestino] = useState('');
+  const {userId} = useAuth()
+  const [nombre, setNombre] = useState()
 
 
   useEffect(() => {
@@ -32,6 +36,28 @@ export default function AltaCarga() {
     // Limpia el observador cuando el componente se desmonta
     return () => unsubscribe();
   }, []);
+
+
+
+  useEffect(() => {
+    // Query para obtener las cargas del usuario
+    const fetchCargas = async () => {
+      try {
+        const response = await fetch(`http://${SERVER_IP}:3000/cargas/${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setCargas(data); // Almacena las cargas en la variable de estado
+        } else {
+          throw new Error('Este usario no tiene cargas, Registra tu primera carga');
+        }
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Este usario no tiene cargas, Registra tu primera carga ');
+      }
+    };
+
+    fetchCargas(); // Llama a la función para obtener las cargas del usuario
+  }, [userId]);
   
 
   const guardarCarga = async () => {
@@ -44,7 +70,7 @@ export default function AltaCarga() {
         const uid = user.uid; // Obtiene el UID del usuario autenticado
   
         // Verificar si algún campo está vacío
-        if (!peso || !consideraciones || !largo || !ancho || !altura || !destino) {
+        if (!peso || !consideraciones || !largo || !ancho || !altura || !destino || !nombre) {
           Alert.alert('Todos los campos son requeridos');
           return;
         }
@@ -63,6 +89,7 @@ export default function AltaCarga() {
               ancho: parseFloat(ancho), // Convertir a número
               altura: parseFloat(altura), // Convertir a número
               destino,
+              nombre: nombre
             }),
           });
   
@@ -88,6 +115,23 @@ export default function AltaCarga() {
       }
     });
   };
+
+  const handleBorrarCarga = async (id) => {
+    try {
+      const response = await fetch(`http://${SERVER_IP}:3000/cargas/${id}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) {
+        setCargas(prevCargas => prevCargas.filter(carga => carga.id !== id));
+        Alert.alert('Carga eliminada exitosamente');
+      } else {
+        throw new Error('Error al borrar la carga');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error al borrar la carga');
+    }
+  };
   
   return (
     <View style={styles.carga}>
@@ -100,6 +144,12 @@ export default function AltaCarga() {
           <Text style={styles.titulo}>Alta de carga</Text>
         </View>
         <View style={styles.formulario}>
+        <TextInput
+            placeholder="Nombre:"
+            style={styles.input}
+            value={nombre}
+            onChangeText={setNombre}
+          />
           <TextInput
             placeholder="Peso de carga:"
             style={styles.input}
@@ -144,6 +194,21 @@ export default function AltaCarga() {
         <TouchableOpacity style={styles.searchButton} onPress={guardarCarga}>
           <Text style={styles.searchButtonText}>Guardar</Text>
         </TouchableOpacity>
+
+        <ScrollView style={styles.scrollView}>
+        {cargas.map((carga, index) => (
+          <View key={index} style={styles.cargaItem}>
+            <Text>{`Peso: ${carga.peso}, Consideraciones: ${carga.consideraciones}`}</Text>
+            <Text>{`Status: ${carga.status}`}</Text>
+            <Text>{`Dimensiones: ${carga.largo} x ${carga.ancho} x ${carga.altura}`}</Text>
+            <Text>{`Destino: ${carga.destino}`}</Text>
+            <Text>{`Comentarios: ${carga.comentarios}`}</Text>
+            <TouchableOpacity onPress={() => handleBorrarCarga(carga.id)} style={styles.botonBorrar}>
+              <Text style={styles.textoBotonBorrar}>Borrar</Text>
+            </TouchableOpacity>
+          </View>
+        ))} 
+      </ScrollView>
       </View>
     </View>
   );
@@ -212,5 +277,24 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  scrollView: {
+    width: '100%',
+    maxHeight: 300, // Altura máxima del ScrollView
+    borderWidth: 1, // Borde para resaltar el ScrollView
+    borderColor: '#ddd', // Color del borde
+    borderRadius: 10, // Borde redondeado
+  },
+  botonBorrar: {
+    backgroundColor: 'red',
+    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginTop: 10,
+  },
+  textoBotonBorrar: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

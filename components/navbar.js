@@ -3,7 +3,6 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Feather, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
-
 const Navbar = () => {
   const navigation = useNavigation();
 
@@ -31,6 +30,11 @@ const Navbar = () => {
     });
   };
 
+  const handleGoToLastMonth = () => {
+    navigation.navigate('lastmonth', {
+      // Parámetros opcionales
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.navbar}>
@@ -48,6 +52,10 @@ const Navbar = () => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleGoToDriver}>
         <MaterialCommunityIcons name="truck-delivery-outline" size={24} color="black" />
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.button} onPress={handleGoToLastMonth}>
+        <MaterialCommunityIcons name="dump-truck" size={24} color="black" />
         </TouchableOpacity>
       </View>
     </View>

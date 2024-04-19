@@ -13,14 +13,15 @@ import debounce from 'lodash.debounce';
 import { getAuth } from 'firebase/auth';
 import { useAuth } from "../context/auth";
 
+
 export default function Home() {
   let typingTimer = useRef(null); 
 
   const {userId} = useAuth()
-  
+  const [userType, setUserType] = useState('')
   const [cargas, setCargas] = useState([]);
   const [transportOptions, setTransportOptions] = useState([]);
-
+  const [userData, setUserData] = useState()
   const [selectingLocation, setSelectingLocation] = useState(false); 
   
   const [modalVisible, setModalVisible] = useState(false);
@@ -89,6 +90,29 @@ export default function Home() {
   });
   const mapRef = useRef(null);
   
+  const getUserData =  async () => {
+    try {
+      const response = await fetch(`http://${SERVER_IP}:3000/perfil/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        const newUserData = await response.json();
+        setUserData(newUserData)
+        await  setUserType(newUserData.user_type);
+        console.log('usuarioObtenido', newUserData)
+        console.log('usertYPE: ', userType)
+        return newUserData
+      } else {
+        throw new Error('Error en el servidor');
+      }
+    } catch (error) {
+      console.error('Error al obtener los transportes del usuario del usuario:', error);
+    }
+  }
+
   useEffect(() => {
     console.log('User id en la sesion que inicio: ', userId)
     getLocationPermission();
@@ -96,6 +120,7 @@ export default function Home() {
     obtenerOpcionesTransporte();
     getLocationPermission();
     handleLocation();
+    getUserData()
     return () => {
       clearTimeout(typingTimer.current);
     };
@@ -115,10 +140,10 @@ export default function Home() {
         console.log("Cargas obtenidas:", cargasData);
         setCargas(cargasData);
       } else {
-        throw new Error('Error en el servidor');
+        throw new Error('Este usario no tiene cargas, Registra tu primera carga');
       }
     } catch (error) {
-      console.error('Error al obtener las cargas del usuario:', error);
+      console.error('Este usario no tiene cargas, Registra tu primera carga');
     }
   };
 

@@ -12,6 +12,7 @@ export default function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [UserName, setUserName] = useState('');
+
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -105,6 +106,7 @@ export default function Register() {
                         <Ionicons name={showConfirmPassword ? "eye-off" : "eye"} size={24} color="black" />
                     </TouchableOpacity>
                 </View>
+                
                 <View style={styles.padreBoton}>
                     <TouchableOpacity style={styles.cajaBoton} onPress={registro}>
                         <Text style={styles.textoBoton}>Registrarse</Text>

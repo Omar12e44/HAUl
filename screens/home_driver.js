@@ -37,7 +37,7 @@ const HomeDriver = () => {
 
   const handleConfirm = () => {
     console.log('transporte que se manda al ongoing: ',  selectedTransporte)
-    navigation.navigate('OnGoingTrips', {selectedTransporte: selectedTransporte});
+    navigation.navigate('OnGoingMeet', {selectedTransporte: selectedTransporte});
     setModalVisible(false);
   };
 

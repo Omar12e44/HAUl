@@ -15,6 +15,10 @@ import OngoingTrips from './screens/OngoingTrips'
 import OnGoing from './screens/OnGoing';
 import { readDataRealTime } from './firebaseConfig';
 import { useEffect } from 'react';
+import { useAuth } from './context/auth';
+import { SolicitudTerminada } from './screens/SolicitudTerminada';
+import OnGoingMeet from './screens/OnGoingMeet';
+import LastMonthSolicitudes from './screens/LastMonthSolicitudes';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +31,7 @@ export default function App() {
     return (
       <AuthProvider>
       <Stack.Navigator>
+
         <Stack.Screen name="login" component={Login} 
         options={{
           title:'HAUL',
@@ -78,11 +83,22 @@ export default function App() {
           headerShown:false,
         }}
         />
-         <Stack.Screen name="onGoing" component={OnGoing}
+         <Stack.Screen name="OnGoingMeet" component={OnGoingMeet}
         options={{
           headerShown:false,
         }}
         />
+        <Stack.Screen name="SolicitudTerminada" component={SolicitudTerminada}
+        options={{
+          headerShown:false,
+        }}
+        />
+        <Stack.Screen name="lastmonth" component={LastMonthSolicitudes}
+        options={{
+          headerShown:false,
+        }}
+        />
+       
        
         
       </Stack.Navigator>

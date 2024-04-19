@@ -59,11 +59,11 @@ async function readDataRealTime() {
  
  async function insertDataInFirestore(data) {
   try {
-     const humedad = data.humidity !== undefined ? data.humidity : "Valor por defecto";
-     const latitud = data.latitude !== undefined ? data.latitude : "Valor por defecto";
-     const longitud = data.longitude !== undefined ? data.longitude : "Valor por defecto";
-     const movimiento = data.pirPresence !== undefined ? data.pirPresence : "Valor por defecto";
-     const temperatura = data.temperature !== undefined ? data.temperature : "Valor por defecto";
+     const humedad = data.humedad !== undefined ? data.humedad : "Valor por defecto";
+     const latitud = data.latitud !== undefined ? data.latitud : "Valor por defecto";
+     const longitud = data.longitud !== undefined ? data.longitud : "Valor por defecto";
+     const movimiento = data.movimiento !== undefined ? data.movimiento : "Valor por defecto";
+     const temperatura = data.temperatura !== undefined ? data.temperatura : "Valor por defecto";
  
      await addDoc(collection(dbFirestore, "haul"), {
        Humedad: humedad,

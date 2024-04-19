@@ -4,6 +4,7 @@ import { createContext, useContext } from "react";
 import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword} from 'firebase/auth'
 import { getDatabase, ref, get } from "firebase/database";
 import { auth } from "../firebaseConfig";   
+import SERVER_IP from "../components/config";
 
 export const AuthContext = createContext()
 
@@ -18,6 +19,7 @@ export function AuthProvider({ children }) {
     const [userId, setUserId] = useState('')
     const [loading, setLoading] = useState(true)
     const [gpsData, setGpsData] = useState({})
+    const [userType, setUserType] = useState({})
 
     useEffect(() => {
         onAuthStateChanged(auth, currentUser => {
@@ -36,7 +38,7 @@ export function AuthProvider({ children }) {
         const googleProvider = new GoogleAuthProvider()
         console.log(GoogleAuthProvider);
         return signInWithPopup(auth, googleProvider)
-    }
+    }   
 
     const dbRealTime = getDatabase();
 
@@ -57,6 +59,27 @@ export function AuthProvider({ children }) {
             );
         });
     }
+ 
+    const searchUserType =  async (userIdP) => {
+        try {
+          const response = await  fetch(`http://${SERVER_IP}:3000/userType/${userIdP}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (response.ok) {
+            const newUserType = await response.json();
+            setUserType(newUserType)
+            console.log('typeVERIFICAR: ', newUserType)
+          } else {
+            throw new Error('Error en el servidor');
+          }
+        } catch (error) {
+          console.error('Error al obtener el usertype del usuario:', error);
+        }
+    }
+
     return (
         <AuthContext.Provider 
             value={{
@@ -66,7 +89,9 @@ export function AuthProvider({ children }) {
                 loading,
                 logInWithGoogle,
                 gpsData,
-                readDataRealTime
+                readDataRealTime,
+                searchUserType,
+                userType
             }} 
         >
             {children}
